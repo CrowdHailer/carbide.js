@@ -11,6 +11,9 @@ To keep this library relevant it uses ES5 JavaScript with ES6 modules.
 This library is to be used with [Rollup](http://rollupjs.org) as a build step (Think browserify for ES6 modules).
 npm scripts are included in this repository to build to over legacy formats.
 
+We will release on using npm distribution tags before main versions.
+[Described here](https://medium.com/greenkeeper-blog/one-simple-trick-for-javascript-package-maintainers-to-avoid-breaking-their-user-s-software-and-to-6edf06dc5617#.t839vcynj)
+
 ### Documentation
 
 #### Map
@@ -27,5 +30,9 @@ muppet.occupation = "Plumber";
 
 var gonzo = muppet.set("name", "gonzo")
 var animal = muppet.merge({name: "Animal", occupation: "Musician"})
-map.fetch("name", "Beaker")
 ```
+
+### Discussion
+
+- Adding a fetch method
+`map.fetch(key, default)` throw Key error if key is not defined and default not given
