@@ -33,7 +33,36 @@ var animal = muppet.merge({name: "Animal", occupation: "Musician"});
 var muppet = mupper.update("age", function(x){ x + 1; });
 ```
 
+#### Struct
+A struct is grouped collection of variables.
+It is less flexible and more reliable than a map as it will only accept keys it was initialised with.
+
+```js
+var bread = Struct({name: "bread", daysFresh: 3});
+
+var brownBread = bread.set("name", "brown bread");
+var tomorrowsBread = bread.update("daysFresh", (days) => days - 1);
+bread.fetch("other")
+// ! throw KeyError
+bread.keys
+// ["name", "daysFresh"]
+bread.has("name")
+// => true
+```
+
+Struct can be the core of an immutable custom object.
+In the future we might provide sugar for this functionality.
+
+```js
+VECTOR_DEFAULTS = {x: 0, y: 0, z: 0};
+function Vector(raw){
+  Struct.call(this, VECTOR_DEFAULTS, raw);
+}
+Vector.prototype = Object.create(Struct.prototype);
+Vector.prototype.constructor = Vector;
+```
+
 ### Discussion
 
-- Adding a fetch method
+- Adding a fetch method to map
 `map.fetch(key, default)` throw Key error if key is not defined and default not given
