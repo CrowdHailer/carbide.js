@@ -28,6 +28,12 @@ describe("Map", function(){
     expect(map.attribute).toBe("new Value");
   });
 
+  it("should be able to update a value", function(){
+    var map = Map({attribute: "value"});
+    map = map.update("attribute", function(a){ return a + ":updated"; });
+    expect(map.attribute).toBe("value:updated");
+  });
+
   it("can be merged with a new map", function(){
     var map = Map({attribute: "value"});
     map = map.merge({"attribute": "new Value"});

@@ -21,15 +21,16 @@ We will release on using npm distribution tags before main versions.
 ```js
 import Map from "carbide/map";
 
-var muppet = Map({name: "Kermit", occupation: "Muppet"});
+var muppet = Map({name: "Kermit", occupation: "Muppet", age: 15});
 
 muppet.name;
 // => "Kermit"
 muppet.occupation = "Plumber";
 // !! Freeze error
 
-var gonzo = muppet.set("name", "gonzo")
-var animal = muppet.merge({name: "Animal", occupation: "Musician"})
+var gonzo = muppet.set("name", "gonzo");
+var animal = muppet.merge({name: "Animal", occupation: "Musician"});
+var muppet = mupper.update("age", function(x){ x + 1; });
 ```
 
 ### Discussion

@@ -18,3 +18,7 @@ Map.prototype.set = function (key, value) {
 Map.prototype.merge = function (other) {
   return Map(this, other);
 };
+
+Map.prototype.update = function (key, operation) {
+  return this.set(key, operation(this[key]));
+};
