@@ -37,6 +37,9 @@ Struct.prototype.fetch = function (key) {
 };
 
 Struct.prototype.set = function (key, value) {
+  if (this[key] === value) {
+    return this;
+  }
   var tmp = {};
   tmp[key] = value;
   return this.merge(tmp);

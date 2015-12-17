@@ -48,6 +48,11 @@ describe("Struct", function(){
     }).toThrowError(KeyError, /other/);
   });
 
+  it("should be the same article if setting an attribute to the current value", function(){
+    var newStruct = struct.set("attribute", "value");
+    expect(newStruct).toBe(struct);
+  });
+
   describe("after setting attribute to new value", function(){
     var newStruct;
     beforeEach(function(){
