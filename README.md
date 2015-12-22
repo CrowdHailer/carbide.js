@@ -54,9 +54,10 @@ Struct can be the core of an immutable custom object.
 In the future we might provide sugar for this functionality.
 
 ```js
-VECTOR_DEFAULTS = {x: 0, y: 0, z: 0};
+var VECTOR_DEFAULTS = {x: 0, y: 0, z: 0};
 function Vector(raw){
-  Struct.call(this, VECTOR_DEFAULTS, raw);
+  if ( !(this instanceof Vector) ) { return new Vector(VECTOR_DEFAULTS, raw); }
+  return Struct.call(this, VECTOR_DEFAULTS, raw);
 }
 Vector.prototype = Object.create(Struct.prototype);
 Vector.prototype.constructor = Vector;
