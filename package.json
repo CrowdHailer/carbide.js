@@ -1,11 +1,15 @@
 {
   "name": "carbide",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Sufficiently immutable objects for JavaScript.",
   "main": "carbide.js",
   "scripts": {
     "test": "karma start",
-    "lint": "eslint ./*.js --ignore-pattern karma.conf.js"
+    "lint": "eslint ./*.js --ignore-pattern karma.conf.js",
+    "prebuild": "rm -rf ./dist && mkdir dist",
+    "build": "npm run -s bundle && npm run -s minify",
+    "bundle": "rollup carbide.js --format iife --name carbide > dist/carbide.es5.js",
+    "minify": "uglifyjs --compress --mangle -- dist/carbide.es5.js > dist/carbide.es5.min.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +34,7 @@
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.6",
     "karma-rollup-preprocessor": "^2.0.0",
-    "rollup": "^0.21.2"
+    "rollup": "^0.21.2",
+    "uglify-js": "^2.6.1"
   }
 }
