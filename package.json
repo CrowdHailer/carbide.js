@@ -4,7 +4,8 @@
   "description": "Sufficiently immutable objects for JavaScript.",
   "main": "carbide.js",
   "scripts": {
-    "test": "karma start"
+    "test": "karma start",
+    "lint": "eslint ./*.js --ignore-pattern karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/CrowdHailer/carbide.js#readme",
   "devDependencies": {
+    "eslint": "^2.0.0-alpha-2",
     "jasmine": "^2.4.1",
     "karma": "^0.13.15",
     "karma-firefox-launcher": "^0.1.7",

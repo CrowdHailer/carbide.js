@@ -1,7 +1,7 @@
 /* jshint esnext: true */
 
 export function KeyError(key) {
-  this.name = 'KeyError';
+  this.name = "KeyError";
   this.message = "key \"" + key + "\" not found";
   this.stack = (new Error()).stack;
 }
