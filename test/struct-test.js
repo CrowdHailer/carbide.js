@@ -1,9 +1,8 @@
 /* jshint esnext: true */
 
 import Struct from "../struct";
-import { KeyError } from "../struct";
+import { KeyError } from "../key-error";
 
-// Looking at the definition of Map on MDN it might make more sense to consider this an immutable object.
 describe("Struct", function(){
   var struct;
   beforeEach(function(){
@@ -16,7 +15,6 @@ describe("Struct", function(){
 
   it("should be forbidden to assign an attribute", function(){
     struct.attribute = "new Value";
-    // DEBT force throw error.
     expect(struct.attribute).toBe("value");
   });
 
@@ -30,22 +28,26 @@ describe("Struct", function(){
     }).toThrowError(KeyError, /other/);
   });
 
-  it("#has should return true for present attribute", function(){
-    expect(struct.has("attribute")).toBe(true);
+  it("#hasKey should return true for present attribute", function(){
+    expect(struct.hasKey("attribute")).toBe(true);
   });
 
-  it("#has should return false for absent attribute", function(){
-    expect(struct.has("other")).toBe(false);
+  it("#hasKey should return false for absent attribute", function(){
+    expect(struct.hasKey("other")).toBe(false);
   });
 
   it("should have all the attributes as keys", function () {
     expect(Object.keys(struct)).toEqual(["attribute"]);
   });
 
+  it("should be an instance of Struct", function(){
+    expect(struct instanceof Struct).toBe(true);
+  });
+
   it("should throw an error when setting a nonexistant key", function(){
     expect(function(){
       struct.set("other", "random");
-    }).toThrowError(KeyError, /other/);
+    }).toThrowError(KeyError, /"other"/);
   });
 
   it("should be the same article if setting an attribute to the current value", function(){

@@ -1,9 +1,13 @@
 # Carbide.js
 
-### Sufficiently immutable objects for JavaScript.
+**Immutable Structs for reliable predictable JavaScript**
 
-Create low overhead immutable objects with carbide.
-The objects created with carbide expose an immutable API but do not go to great lengths to prevent the developer from mutating the objects should the deliberately circumvent the given API.
+A Struct is a complex data type that defines a group of variables.
+Carbide contains two flavors of Struct: `Struct` and `OpenStruct`.
+
+Carbide structs are designed to have a low overhead and to not fight against the dynamic nature of JavaScript.
+They do not provide guarantees but are "sufficiently" immutable
+Sufficiently immutable objects have an immutable API, they do not prevent the developer from circumventing the API.
 
 ### Modern JavaScript
 
@@ -16,54 +20,84 @@ We will release on using npm distribution tags before main versions.
 
 ### Documentation
 
-#### Map
-
-```js
-import Map from "carbide/map";
-
-var muppet = Map({name: "Kermit", occupation: "Muppet", age: 15});
-
-muppet.name;
-// => "Kermit"
-muppet.occupation = "Plumber";
-// !! Freeze error
-
-var gonzo = muppet.set("name", "gonzo");
-var animal = muppet.merge({name: "Animal", occupation: "Musician"});
-var muppet = mupper.update("age", function(x){ x + 1; });
-```
-
 #### Struct
-A struct is grouped collection of variables.
-It is less flexible and more reliable than a map as it will only accept keys it was initialised with.
+Structs are simple immutable objects.
+They contain values which may be anything.
+It is up to the developer to only pass immutable values to the constructor to get an effective deep freeze.
+
+All methods on a struct leave the struct unchanged.
 
 ```js
-var bread = Struct({name: "bread", daysFresh: 3});
+// Using es6 module format to import the struct constructor
+import Struct from "carbide/struct";
 
-var brownBread = bread.set("name", "brown bread");
+var bread = Struct({name: "bread", daysFresh: 1});
+
 var tomorrowsBread = bread.update("daysFresh", (days) => days - 1);
-bread.fetch("other")
-// ! throw KeyError
-bread.keys
-// ["name", "daysFresh"]
-bread.has("name")
-// => true
+
+var freshBread = bread.set("daysFresh", 3);
+
+bread.daysFresh
+// => 1
+tomorrowsBread.daysFresh
+// => 0
+freshBread.daysFresh
+// => 3
 ```
 
-Struct can be the core of an immutable custom object.
-In the future we might provide sugar for this functionality.
+Structs can only have the properties that where assigned to them during construction.
+Attempting to set or fetch a key that does not exist with throw an error
+
+```js
+bread.hasKey("name")
+// => true
+bread.fetch("starRating")
+// ! throw KeyError key "starRating" not found
+```
+
+Structs encourage the use of techniques from functional programming, however they are JavaScript objects and can be treated as one
+
+```js
+Object.keys(bread)
+// ["name", "daysFresh"]
+
+bread instanceof Struct;
+// => true
+
+// Works with or without new Keyword
+var ryeBread = new Struct({name: "ryeBread", daysFresh: 1});
+```
+#### OpenStruct
+
+OpenStruct implements exactly the same behaviour as the Struct except new properties may be added.
+
+```js
+import OpenStruct from "carbide/open-struct";
+
+var kermit = Map({name: "Kermit", occupation: "Muppet", age: 15});
+
+var kermitFound = kermit.set("address", "Brazil");
+
+kermitFound.address;
+// => "Brazil"
+```
+
+### Custom immutable objects
+
+Because Structs behave well as JavaScript Objects they can be used in a prototype chain.
+Structs can be used as the core of an immutable custom types.
+
+This is demonstrated with a vector object.
 
 ```js
 var VECTOR_DEFAULTS = {x: 0, y: 0, z: 0};
+
 function Vector(raw){
   if ( !(this instanceof Vector) ) { return new Vector(VECTOR_DEFAULTS, raw); }
+
   return Struct.call(this, VECTOR_DEFAULTS, raw);
 }
+
 Vector.prototype = Object.create(Struct.prototype);
 Vector.prototype.constructor = Vector;
 ```
-
-### Discussion
-
-- Adding a fetch method to map
-`map.fetch(key, default)` throw Key error if key is not defined and default not given
