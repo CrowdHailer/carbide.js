@@ -101,3 +101,54 @@ function Vector(raw){
 Vector.prototype = Object.create(Struct.prototype);
 Vector.prototype.constructor = Vector;
 ```
+
+Can create macro with [sweet.js](sweetjs.org)
+
+```js
+function Struct(defaults, source){
+  "use strict";
+  if ( !(this instanceof Struct) ) { return new Struct(defaults, source); }
+
+  Object.assign(this, defaults);
+  for (var key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (!this.hasOwnProperty(key)) {
+        throw new KeyError(key);
+      }
+      this[key] = source[key];
+    }
+  }
+  Object.freeze(this);
+}
+macro struct {
+    rule {
+        $name {
+            $($property $[:] $value) (,) ...
+        }
+    } => {
+        function $name(raw){
+            if ( !(this instanceof $name) ) {
+                return new $name(raw);
+            }
+
+            return Struct.call(this, {
+                $($property $[:] $value) (,) ...
+            }, raw)
+        }
+        
+        $name.prototype = Object.create(Struct.prototype);
+        $name.prototype.constructor = $name;
+    }
+    
+}
+
+struct Vector {
+    x: 0,
+    y: 0
+}
+v = Vector({t: 5});
+console.log(v)
+
+```
+
+[editable version](http://sweetjs.org/browser/editor.html#function%20Struct(defaults,%20source)%7B%0A%20%20%22use%20strict%22;%0A%20%20if%20(%20!(this%20instanceof%20Struct)%20)%20%7B%20return%20new%20Struct(defaults,%20source);%20%7D%0A%0A%20%20Object.assign(this,%20defaults);%0A%20%20for%20(var%20key%20in%20source)%20%7B%0A%20%20%20%20if%20(source.hasOwnProperty(key))%20%7B%0A%20%20%20%20%20%20if%20(!this.hasOwnProperty(key))%20%7B%0A%20%20%20%20%20%20%20%20throw%20new%20KeyError(key);%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20this%5Bkey%5D%20=%20source%5Bkey%5D;%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20Object.freeze(this);%0A%7D%0Amacro%20struct%20%7B%0A%20%20%20%20rule%20%7B%0A%20%20%20%20%20%20%20%20$name%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20$($property%20$%5B:%5D%20$value)%20(,)%20...%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%20=%3E%20%7B%0A%20%20%20%20%20%20%20%20function%20$name(raw)%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20(%20!(this%20instanceof%20$name)%20)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20new%20$name(raw);%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20Struct.call(this,%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20$($property%20$%5B:%5D%20$value)%20(,)%20...%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D,%20raw)%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20$name.prototype%20=%20Object.create(Struct.prototype);%0A%20%20%20%20%20%20%20%20$name.prototype.constructor%20=%20$name;%0A%20%20%20%20%7D%0A%20%20%20%20%0A%7D%0A%0Astruct%20Vector%20%7B%0A%20%20%20%20x:%200,%0A%20%20%20%20y:%200%0A%7D%0Av%20=%20Vector(%7Bt:%205%7D);%0Aconsole.log(v)%0A)
