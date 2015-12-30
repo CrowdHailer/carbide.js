@@ -5,35 +5,49 @@
 A Struct is a complex data type that defines a group of variables.
 Carbide contains two flavors of Struct: `Struct` and `OpenStruct`.
 
+### Example
+
+```js
+import Struct from "carbide/struct";
+
+var address = Struct({city: "London", country: "UK"});
+var newAddress = address.set({city: "Liverpool"});
+
+address.city
+// => London
+address.city
+// => Liverpool
+```
+
 Carbide structs are designed to have a low overhead and to not fight against the dynamic nature of JavaScript.
-They do not provide guarantees but are "sufficiently" immutable
-Sufficiently immutable objects have an immutable API, they do not prevent the developer from circumventing the API.
+They do not provide guarantees but are "sufficiently" immutable.
+Sufficiently immutable objects have an immutable API.
+They do not prevent the developer from circumventing the API.
 
-### Modern JavaScript
+### Installation
+This package is available on [npm](https://www.npmjs.com/package/carbide).
 
-To keep this library relevant it uses ES5 JavaScript with ES6 modules.
-This library is to be used with [Rollup](http://rollupjs.org) as a build step (Think browserify for ES6 modules).
-npm scripts are included in this repository to build to over legacy formats.
+```
+$ npm install carbide
+```
 
-We will release on using npm distribution tags before main versions.
-[Described here](https://medium.com/greenkeeper-blog/one-simple-trick-for-javascript-package-maintainers-to-avoid-breaking-their-user-s-software-and-to-6edf06dc5617#.t839vcynj)
-
-### Documentation
+### Usage
+Carbide is built using ES6 modules.
+If you use a different setup such as a browser globals see steps below.
 
 #### Struct
 Structs are simple immutable objects.
-They contain values which may be anything.
-It is up to the developer to only pass immutable values to the constructor to get an effective deep freeze.
+They contain properties which may be of any value.
+It is up to the developer to only pass immutable values to the constructor if they require an effective deep freeze.
 
 All methods on a struct leave the struct unchanged.
 
 ```js
-// Using es6 module format to import the struct constructor
 import Struct from "carbide/struct";
 
 var bread = Struct({name: "bread", daysFresh: 1});
 
-var tomorrowsBread = bread.update("daysFresh", (days) => days - 1);
+var tomorrowsBread = bread.update("daysFresh", function(days){ return days - 1; });
 
 var freshBread = bread.set("daysFresh", 3);
 
@@ -82,12 +96,11 @@ kermitFound.address;
 // => "Brazil"
 ```
 
-### Custom immutable objects
+### Struct inheritance
 
-Because Structs behave well as JavaScript Objects they can be used in a prototype chain.
-Structs can be used as the core of an immutable custom types.
+Structs can be inherited from to create immutable custom immutable types.
 
-This is demonstrated with a vector object.
+For example here is a vector object.
 
 ```js
 var VECTOR_DEFAULTS = {x: 0, y: 0, z: 0};
@@ -102,6 +115,46 @@ Vector.prototype = Object.create(Struct.prototype);
 Vector.prototype.constructor = Vector;
 ```
 
+### Build non-ES6 distributions
+
+This library uses ES5 JavaScript with ES6 modules.
+To get started with ES6 modules today you can use [Rollup](http://rollupjs.org) which is an excellent tool.
+[Rollup](http://rollupjs.org) is a bundler for ES6 modules (Browserify for ES6 modules).
+
+To build the releases change into the carbide directory.
+
+```
+$ cd path/to/carbide
+```
+
+Run the build script.
+
+```
+$ npm run build
+```
+
+There will be a build version that can now be used directly in the browser.
+
+```html
+<script type="text/javascript" src="path/to/carbide/dist/carbide.es5.js"></script>
+```
+
+### Contributing
+
+1. Fork it ( https://github.com/lotus/lotus/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Run the tests `npm test`
+6. Create a new Pull Request
+
+We will release on using npm distribution tags before main versions.
+[Described here](https://medium.com/greenkeeper-blog/one-simple-trick-for-javascript-package-maintainers-to-avoid-breaking-their-user-s-software-and-to-6edf06dc5617#.t839vcynj)
+
+
+### Macro example
+
+An example to clean up the inheritance procedure.
 Can create macro with [sweet.js](sweetjs.org)
 
 ```js
@@ -135,11 +188,11 @@ macro struct {
                 $($property $[:] $value) (,) ...
             }, raw)
         }
-        
+
         $name.prototype = Object.create(Struct.prototype);
         $name.prototype.constructor = $name;
     }
-    
+
 }
 
 struct Vector {
