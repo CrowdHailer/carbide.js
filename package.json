@@ -1,6 +1,6 @@
 {
   "name": "carbide",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Sufficiently immutable objects for JavaScript.",
   "main": "carbide.js",
   "scripts": {
